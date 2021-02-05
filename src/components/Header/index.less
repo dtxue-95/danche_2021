@@ -1,4 +1,6 @@
+@import './../style/default.less';
 .header {
+    background-color: @colorM;
     .header-top {
         height: 60px;
         line-height: 60px;
@@ -14,7 +16,21 @@
         padding: 0 20px;
         border-top: 1px solid #f9c700;
         .breadcrumb-title {
+            font-size: @fontC;
             text-align: center;
+            //使用伪类方式  &表示在后面追加   .after{}表示在后面嵌套
+            &:after {
+                position: absolute; //先做绝对定位
+                content: ''; //内容为空 去占位
+                left: 87px;
+                top: 39px;
+                // width: 10px;
+                // height: 10px;
+                // background-color: #f00;
+                border-top: 9px solid @colorM;
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;
+            }
         }
         .weather {
             text-align: right;

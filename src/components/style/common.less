@@ -1,3 +1,4 @@
+@import './default.less';
 .container {
     // display:flex; 因为使用了栅格系统所以这些不需要写了
     .nav-left {
@@ -10,6 +11,7 @@
     .main{
         // flex: 1;
         height: calc(100vh);
+        background-color: @colorL;
     }
     .content {
         position: relative;

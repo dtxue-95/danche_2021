@@ -103,6 +103,14 @@ class BasicTable extends Component {
                         pagination={false}
                     />
                 </Card>
+                <Card title="高级表格">
+                    <Table
+                        bordered
+                        columns = {columns}
+                        dataSource = {this.state.dataSource}
+                        pagination = {false}
+                    />
+                </Card>
             </div>
         );
     }

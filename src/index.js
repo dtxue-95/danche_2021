@@ -15,7 +15,10 @@ ReactDOM.render(
     {/* <Admin /> */}
     {/* <Home/> */}
     {/* <Router/> */}
+    
     <Router/>
+    
+    
   </React.StrictMode>,
   document.getElementById('root')
 );

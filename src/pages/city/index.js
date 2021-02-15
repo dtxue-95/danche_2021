@@ -1,7 +1,7 @@
 import { Button, Card, Form, Select, Table } from 'antd';
 import React, { Component } from 'react';
-import axios from './../../axios/index'
-import Utils from './../../utils/utils'
+// import axios from './../../axios/index'
+// import Utils from './../../utils/utils'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -11,16 +11,16 @@ class City extends Component {
 
     }
     //默认请求接口数据
-    requestList = () => {
-        axios.ajax({
-            url:'',
-            data:{
+    // requestList = () => {
+    //     axios.ajax({
+    //         url:'',
+    //         data:{
 
-            }
-        }).then((res)=>{
+    //         }
+    //     }).then((res)=>{
             
-        })
-    }
+    //     })
+    // }
 
     //开通城市
     handleOpenCity = () => {

@@ -1,4 +1,5 @@
 @import './default.less';
+@import './loading.less';
 .container {
     // display:flex; 因为使用了栅格系统所以这些不需要写了
     .nav-left {
@@ -18,4 +19,14 @@
         position: relative;
         padding: 20px;
     }
+}
+.content-wrap{
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    margin-top:-3px;
+}
+//改动框架原来的样式
+.ant-table-wrapper{
+    margin-left:-1px;
+    margin-right:-2px;
 }

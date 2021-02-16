@@ -1,5 +1,6 @@
-import { Card, Table } from 'antd';
+import { Button, Card, message, Modal, Table } from 'antd';
 import React, { Component } from 'react';
+import Utils from '../../utils/utils';
 import axios from './../../axios/index'
 // import axios from 'axios'
 class BasicTable extends Component {
@@ -43,6 +44,7 @@ class BasicTable extends Component {
                 time: '09:00'
             },
         ]
+        //消除警告
         data.map((item,index)=>{
             item.key = index;
         })
@@ -53,7 +55,7 @@ class BasicTable extends Component {
     }
 
 //动态获取mock数据
-request = () => {
+    request = () => {
     // 封装好后不再使用原生模式获取数据
     // let baseUrl = 'https://www.fastmock.site/mock/a7ca75d7ecc413eb4a0f2ed600ffc80b/mockapi'; 
     // axios.get(baseUrl+'/table/list2')
@@ -70,12 +72,14 @@ request = () => {
     // })
 
     //调用封装的axios
+    let _this = this;
     axios.ajax({
         url:'/table/list',
         data:{
             params:{
                 page:this.params.page
-            }
+            },
+            // isShowLoading:false  //默认就是true
         }
     }).then((res)=>{
         // alert("000");
@@ -84,12 +88,50 @@ request = () => {
                 item.key = index;
             })
             this.setState({
-                dataSource2:res.result.list
+                dataSource2:res.result.list,
+                selectedRowKeys:[],
+                selectedRows:null,
+                pagination:Utils.pagination(res,(current)=>{
+                    _this.params.page = current;
+                    this.request();
+                })
             })
         }
     })
-}
-
+    }
+    onRowClick = (record,index) => {
+        let selectKey = [index]; //定义索引
+        Modal.info({
+            title:'信息',
+            content: `用户名:${record.userName},性别:${record.sex}`
+        })
+        this.setState({
+            selectedRowKeys:selectKey, //选中的哪个索引
+            selectdeItem:record //选中的哪一项
+        })
+    }
+    // add = ()=> {
+    //     let item = this.state.selectdeItem;
+    //     if(item.id){
+    //         //做一些事情处理新增、删除item等
+    //     }
+    // }
+    //多选执行删除动作
+    handleDelete = (()=>{
+        let rows = this.state.selectedRows;
+        let ids = [];
+        rows.map((item)=>{
+            ids.push(item.id)
+        })
+        Modal.confirm({
+            title:'删除提示',
+            content:`您确定要删除这些数据吗:${ids.join(',')}`,
+            onOk:()=>{
+                message.success('删除成功');
+                this.request();
+            }
+        })
+    })
     render() { 
         const columns = [
             {
@@ -105,17 +147,44 @@ request = () => {
             {
                 title:'性别',
                 key:'sex',
-                dataIndex:'sex'
+                dataIndex:'sex',
+                //render 处理当前字段 进行格式化
+                render(sex){
+                    return sex === 1?'男':'女'
+                }
             },
             {
                 title:'状态',
                 key: 'state',
-                dataIndex:"state"
+                dataIndex:"state",
+                render(state){
+                    let config = {
+                        '1':'咸鱼一条',
+                        '2':'风华浪子',
+                        '3':'北大才子',
+                        '4':'百度FE',
+                        '5':'创业者'
+                    }
+                    return config[state];
+                }
             },
             {
                 title:'爱好',
                 key:'interest',
-                dataIndex:'interest'
+                dataIndex:'interest',
+                render(abc){
+                    let config = {
+                        '1': '游泳',
+                        '2': '打篮球',
+                        '3': '踢足球',
+                        '4': '跑步',
+                        '5': '爬山',
+                        '6': '骑行',
+                        '7': '桌球',
+                        '8': '麦霸'
+                    }
+                    return config[abc];
+                }
             },
             {
                 title:'生日',
@@ -128,11 +197,32 @@ request = () => {
                 dataIndex: 'address'
             },
             {
-                title:'早起时间',
+                title:'工作时间',
                 key:'time',
                 dataIndex:'time'
             }
         ]
+        // const {selectedRowKeys} =this.state; //使用解构
+        const selectedRowKeys = this.state.selectedRowKeys; //不使用解构
+        const rowSelection = {
+            type:'radio',
+            selectedRowKeys
+        }
+        const rowCheckSelection = {
+            type: 'checkbox',
+            selectedRowKeys,
+            onChange:(selectedRowKeys,selectedRows)=>{
+                // let ids = [];
+                // selectedRows.map((item)=>{
+                //     ids.push(item.id)
+                // })
+                this.setState({
+                    selectedRowKeys,
+                    selectedRows
+                    // seletctedIds: ids //可以做添加、删除等操作
+                })
+            }
+        }
         return (
             <div>
                 <Card title="基础表格">
@@ -149,6 +239,46 @@ request = () => {
                         columns = {columns}
                         dataSource = {this.state.dataSource2}
                         pagination={false}
+                    />
+                </Card>
+                <Card title="Mock-单选" style={{margin:'10px 0'}}>
+                    <Table
+                        bordered
+                        rowSelection = {rowSelection}
+                        onRow={(record,index) => {
+                            return {
+                              onClick: () => {
+                                  this.onRowClick(record,index)
+                              }, // 点击行
+                            //   onDoubleClick: event => {},
+                            //   onContextMenu: event => {},
+                            //   onMouseEnter: event => {}, // 鼠标移入行
+                            //   onMouseLeave: event => {},
+                            };
+                          }}
+                        columns = {columns}
+                        dataSource = {this.state.dataSource2}
+                        pagination={false}
+                    />
+                </Card>
+                <Card title="Mock-多选" style={{margin:'10px 0'}}>
+                    <div style={{marginBottom:10}}>
+                          <Button onClick={this.handleDelete}>删除</Button>
+                    </div>
+                    <Table
+                        bordered
+                        rowSelection = {rowCheckSelection}
+                        columns = {columns}
+                        dataSource = {this.state.dataSource2}
+                        pagination={false}
+                    />
+                </Card>
+                <Card title="Mock-表格分页" style={{ margin: '10px 0' }}>
+                    <Table
+                        bordered
+                        columns={columns}
+                        dataSource={this.state.dataSource2}
+                        pagination={this.state.pagination}
                     />
                 </Card>
             </div>

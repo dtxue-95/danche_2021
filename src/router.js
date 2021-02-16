@@ -15,7 +15,9 @@ import Carousels from './pages/ui/carousel';
 import FormLogin from './pages/form/login';
 import FormRegister from './pages/form/register';
 import BasicTable from './pages/table/basicTable';
+import HighTable from './pages/table/highTable';
 import City from './pages/city';
+import Order from './pages/order';
 class IRouter extends Component {
     render() { 
         return (
@@ -37,7 +39,9 @@ class IRouter extends Component {
                                 <Route path="/admin/form/login" component={FormLogin}/>
                                 <Route path="/admin/form/reg" component={FormRegister}/>
                                 <Route path="/admin/table/basic" component={BasicTable}/>
+                                <Route path="/admin/table/high" component={HighTable}/>
                                 <Route path="/admin/city" component={City}/>
+                                <Route path="/admin/order" component={Order}/>
                                 <Route component={NoMatch}/>
                             </Switch>
                         </Admin>
